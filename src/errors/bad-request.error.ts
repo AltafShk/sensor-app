@@ -4,13 +4,13 @@ export class BadRequestError extends BaseError {
   statusCode = 400;
   severity = Severity.NORMAL;
 
-  constructor() {
-    super('Bad Request');
+  constructor(message: string) {
+    super(message);
 
     Object.setPrototypeOf(this, BadRequestError.prototype);
   }
 
   serializeErrors(): { message: string; field?: string }[] {
-    return [{ message: 'Bad Request' }];
+    return [{ message: this.message }];
   }
 }

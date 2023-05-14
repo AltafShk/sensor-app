@@ -11,13 +11,13 @@ export const CheckAndCacheID =
 
     // If id is already cached, then reject request
     if (isCached) {
-      console.log(`Request from sensor ${id} already cached`);
+      console.log(`Request with ${id} already cached`);
       throw new AlreadyProcessingError(id);
     }
 
     // If id is not cached, then cache id and process request
     await redisClient.set(cacheKey, "true"); // Cache id for 60 seconds
-    console.log(`Received signal from sensor ${id}`);
+    console.log(`Received signal with ID: ${id}`);
 
     next();
   };

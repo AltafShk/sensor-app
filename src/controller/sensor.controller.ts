@@ -2,6 +2,7 @@ import type { RequestHandler } from "express";
 import { SensorPayload } from "../typings/sensor.payload";
 import { redisClient } from "../utils/redis";
 import { Database } from "../utils/db";
+import { BadRequestError, ForbiddenError } from "../errors";
 
 export abstract class SensorController {
   static handleSignal: RequestHandler<
@@ -16,11 +17,21 @@ export abstract class SensorController {
 
     // Add data to database
     const db = Database.getInstance();
-    await db.query(
-      `INSERT INTO SensorData (id, data) VALUES (${id} ,'${stringifiedData}')`
-    );
 
-    console.log(`Stored signal from sensor ${id}`);
+    try {
+      await db.query(
+        `INSERT INTO SensorData (id, data) VALUES (${id} ,'${stringifiedData}')`
+      );
+    } catch (err: any) {
+      if (err.errno === 1062) {
+        await redisClient.del(`${id}`);
+        throw new BadRequestError(
+          "There can not be a second request with the same id"
+        );
+      }
+    }
+
+    console.log(`Stored signal with ID: ${id}`);
     next();
   };
 }
