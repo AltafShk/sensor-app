@@ -22,6 +22,13 @@ app.get("/sensor-data", async (req: Request, res: Response) => {
   return res.status(200).send(data);
 });
 
+app.get("/clear", async (req: Request, res: Response) => {
+  await redisClient.flushAll();
+  const db = Database.getInstance();
+  await db.query(`DELETE FROM SensorData`);
+  return res.status(200).send("Cache and Database Cleared");
+});
+
 app.use(Middlewares.ErrorHandler());
 
 app.listen(3000, async () => {
