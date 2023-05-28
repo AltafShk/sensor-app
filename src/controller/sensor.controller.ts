@@ -26,7 +26,7 @@ export abstract class SensorController {
       if (err.errno === 1062) {
         await redisClient.del(`${id}`);
         throw new BadRequestError(
-          "There can not be a second request with the same id"
+          "A request with that ID has previously been processed. Each request should have a unique id in the payload for identification."
         );
       }
     }

@@ -6,7 +6,6 @@ export class Database {
   private static instance: Database;
 
   constructor() {
-    console.log("Database connected");
     this.pool = mysql.createPool({
       host: env.DB_HOST,
       user: env.DB_USER,
@@ -18,6 +17,7 @@ export class Database {
     });
 
     Database.instance = this;
+    console.log("Database connected");
   }
 
   public static getInstance(): Database {

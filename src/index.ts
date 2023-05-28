@@ -19,7 +19,15 @@ app.use("/sensor", SensorRouter);
 app.get("/sensor-data", async (req: Request, res: Response) => {
   const db = Database.getInstance();
   const data = await db.query(`SELECT * FROM SensorData`);
-  return res.status(200).send(data);
+
+  const parsedData = data.map((item: any) => {
+    return {
+      id: item.id,
+      data: JSON.parse(item.data).data,
+    };
+  });
+
+  return res.status(200).send(parsedData);
 });
 
 app.get("/clear", async (req: Request, res: Response) => {

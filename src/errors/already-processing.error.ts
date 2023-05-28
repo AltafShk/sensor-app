@@ -11,6 +11,11 @@ export class AlreadyProcessingError extends BaseError {
   }
 
   serializeErrors(): { message: string; field?: string }[] {
-    return [{ message: "Conflicting Request" }];
+    return [
+      {
+        message:
+          "Conflicting Request - A request with same ID is already being processed.",
+      },
+    ];
   }
 }
